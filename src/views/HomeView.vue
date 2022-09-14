@@ -7,7 +7,7 @@
         <span>There are 4 total invoices</span>
       </div>
       <div class="right flex">
-        <div @click="toggleFilterMenu" class="filter flex" ref="filter">
+        <div @click="toggleFilterMenu" class="filter flex">
           <span>Filter by Status</span>
           <img src="@/assets/icon-arrow-down.svg" alt="">
           <ul v-show="filterMenu" class="filterMenu">
@@ -18,7 +18,12 @@
           </ul>
 
         </div>
-        <div @click="newInvoice" class="button flex"></div>
+        <div @click="newInvoice" class="button flex">
+          <div class="innerButton flex">
+            <img src="@/assets/icon-plus.svg" alt="">            
+          </div>
+          <span>New Invoice</span>
+        </div>
       </div>
     </div>
   </div>
@@ -30,6 +35,91 @@
 export default {
   name: 'HomeView',
   components: {
-  }
+  },
+  data() {
+    return {
+      filterMenu:null
+    }
+  },
+  methods: {
+    newInvoice() {
+      
+    },
+    toggleFilterMenu(){
+      this.filterMenu = !this.filterMenu
+    }
+
+  },
 }
 </script>
+<style lang="scss">
+  .home{
+    color: #ffffff;
+    .header{
+      margin-bottom: 65px;
+      .left,.right{
+        flex: 1;
+      }
+
+      .right{
+        justify-content: flex-end;
+        align-items: center;
+        .button, .filter{
+          align-items: center;
+          span{
+            font-size: 12px;
+          }
+        }
+        .filter{
+          position: relative;
+          margin-right: 40px;
+          cursor: pointer;
+          img{
+            margin-left: 12px;
+            width: 9px;
+            height: 5px;
+
+          }
+
+          .filterMenu{
+            width: 120px;
+            position: absolute;
+            top: 25px;
+            list-style: none;
+            background-color: #1e2139;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),0 2px 4px -1px rgba(0, 0, 0, 0.6);
+            li{
+              cursor: pointer;
+              font-size: 12px;
+              padding: 10px 20px;
+              &:hover{
+                color: #1e2139;
+                background-color: #ffffff;
+              }
+            }
+          }
+
+        }
+        .button{
+          padding: 8px 10px;
+          background-color: #7c5dfa;
+          border-radius: 40px;
+          .innerButton{
+            margin-right: 8px;
+            border-radius: 50%;
+            padding: 8px;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            img{
+              width: 10px;
+              height: 10px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+</style>
