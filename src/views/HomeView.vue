@@ -1,6 +1,9 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
+  <div class="home container">
+    <!-- Header  -->
+    <div class="header flex">
+    
+    </div>
   </div>
 </template>
 
