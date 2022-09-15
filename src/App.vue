@@ -3,8 +3,10 @@
     <div v-if="!mobile" class="app flex flex-column">
       <Navigation />
       <div class="appContaint flex flex-column">
+        <InvoiceModel/>    
         <router-view />
       </div>
+        
     </div>
     <div v-else class="mobileText flex flex-column">
         <h2>Sorry this app is not supported in Mobile Devices</h2>
@@ -15,6 +17,7 @@
 
 <script>
 import Navigation from "@/components/Navigation.vue";
+import InvoiceModel from "@/components/InvoiceModel.vue";
 
 export default {
   name: "app-root",
@@ -25,7 +28,8 @@ export default {
   },
   components: {
     Navigation,
-  },
+    InvoiceModel
+},
   created () {
     this.checkScreen();
     window.addEventListener("resize", this.checkScreen)

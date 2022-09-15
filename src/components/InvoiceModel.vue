@@ -50,13 +50,161 @@
             />
           </div>
         </div>
-
-        <!-- Bill To -->
-        <div class="billTo flex flex-column">
-        
+      </div>
+      <!-- Bill To -->
+      <div class="billTo flex flex-column">
+        <h4>Bill To</h4>
+        <div class="input flex flex-column">
+          <label for="clientName">Client's Name</label>
+          <input
+            required
+            type="text"
+            name="clientName"
+            id="clientName"
+            v-model="clientName"
+          />
         </div>
 
+        <div class="input flex flex-column">
+          <label for="clientEmail">Client's Email</label>
+          <input
+            required
+            type="text"
+            name="clientEmail"
+            id="clientEmail"
+            v-model="clientEmail"
+          />
+        </div>
+
+        <div class="input flex flex-column">
+          <label for="clientStreetAddress">Street Address</label>
+          <input
+            required
+            type="text"
+            name="clientStreetAddress"
+            id="clientStreetAddress"
+            v-model="clientStreetAddress"
+          />
+        </div>
+
+        <div class="location flex">
+          <div class="input flex flex-column">
+            <label for="clientCity">City</label>
+            <input
+              required
+              type="text"
+              name="clientCity"
+              id="clientCity"
+              v-model="clientCity"
+            />
+          </div>
+
+          <div class="input flex flex-column">
+            <label for="clientZipCode">Zip Code</label>
+            <input
+              required
+              type="text"
+              name="clientZipCode"
+              id="clientZipCode"
+              v-model="clientZipCode"
+            />
+          </div>
+
+          <div class="input flex flex-column">
+            <label for="clientCountry">Country</label>
+            <input
+              required
+              type="text"
+              name="clientCountry"
+              id="clientCountry"
+              v-model="clientCountry"
+            />
+          </div>
+        </div>
       </div>
+      <!-- Invoice Work Details -->
+      <div class="invoiceWork flex flex-column">
+        <div class="payment flex">
+          <div class="input flex flex-column">
+            <label for="invoiceDate">Invoice Date</label>
+            <input
+              disabled
+              type="text"
+              name="invoiceDate"
+              id="invoiceDate"
+              v-model="invoiceDate"
+            />
+          </div>
+          <div class="input flex flex-column">
+            <label for="paymentDueDate">Payment Due Date</label>
+            <input
+              disabled
+              type="text"
+              name="paymentDueDate"
+              id="paymentDueDate"
+              v-model="paymentDueDate"
+            />
+          </div>
+        </div>
+        <div class="input flex flex-column">
+          <label for="paymentTerms">Payment Terms</label>
+          <select required name="paymentTerms" id="paymentTerms" v-model="paymentTerms">
+            <option value="30">Net 30 Daye's</option>
+            <option value="60">Net 60 Daye's</option>
+          </select>
+        </div>
+        <div class="input flex flex-column">
+          <label for="billerStreetAddress">Product Description</label>
+          <input
+            required
+            type="text"
+            name="productDescription"
+            id="productDescription"
+            v-model="productDescription"
+          />
+        </div>
+        <div class="workItem">
+          <h3>Item List</h3>
+          <table class="ItemList">
+            <tr class="tableHeading flex">
+              <th class="itemName">Item Name</th>
+              <th class="qty">Qty</th>
+              <th class="price">Price</th>
+              <th class="total">Total</th>
+            </tr>
+            <tr
+              class="tableItem flex"
+              v-for="(item, index) in invoiceItemList"
+              :key="index"
+            >
+              <td class="itemName"><input v-model="item.itemName" type="text" /></td>
+              <td class="qty"><input v-model="item.qty" type="text" /></td>
+              <td class="price"><input v-model="item.price" type="text" /></td>
+              <td class="total flex">{{ (item.total = item.qty * item.price) }}</td>
+              <img
+                @click="deleteInvoiceItem(item.id)"
+                src="@/assets/icon-delete.svg"
+                alt="removeItem"
+              />
+            </tr>
+          </table>
+          <div @click="addNewInvoiceItem" class="flex button">
+            <img src="@/assets/icon-plus.svg" alt="" srcset="">Add New Item
+          </div>
+        </div>
+      </div>
+
+      <!-- Save/Exit -->
+      <div class="save flex">
+        <div class="left">
+            <button @click="closeInvoice" class="red">Cancel</button>
+        </div>
+        <div class="right flex">
+            <button @click="saveDraft" class="dark-purple"> Save Draft</button>
+            <button @click="publishInvoice" class="purple"> Create Invoice</button>
+        </div>
+      </div>
+
     </form>
   </div>
 </template>
@@ -91,4 +239,43 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.invoiceWrape{
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: transparent;
+    width: 100%;
+    height: 100vh;
+    overflow: scroll;
+    @media (min-width:900px) {
+        left: 90px;
+    }
+    .invoiceContent{
+        position: relative;
+        padding: 56px;
+        max-width: 700px;
+        width: 100%;
+        background-color: #141625;
+        color: #fff;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),0 2px 4px -1px rgba(0, 0, 0, 0.6);
+
+        h1{
+            margin-bottom: 48px;
+            color: #fff;
+        }
+        h3{
+          margin-bottom: 16px;
+          font-size: 18px;
+          color: #777f98;  
+        }
+        h4{
+            color: #7c5dfa;
+            font-size: 12px;
+            margin-bottom: 24px;
+        }
+    }
+}
+
+
+</style>
