@@ -209,11 +209,13 @@
 </template>
 
 <script>
- import {mapMutations} from "vuex"    
+import { mapMutations } from "vuex";
+import {uid} from 'uid'
 export default {
   name: "InvoiceModel",
   data() {
     return {
+      dateOption: { year: "numeric", month: "short", day: "numeric" },
       billerStreetAddress: null,
       billerCity: null,
       billerZipCode: null,
@@ -236,11 +238,44 @@ export default {
       invoiceTotal: 0,
     };
   },
+  created() {
+    // get current date for invoice date field,
+    this.invoiceDateUnix = Date.now();
+    this.invoiceDate = new Date(this.invoiceDateUnix).toLocaleDateString(
+      "en-us",
+      this.dateOption
+    );
+  },
   methods: {
-    ...mapMutations(['Toggle_Invoice']),
+    ...mapMutations(["Toggle_Invoice"]),
     closeInvoice() {
-        this.Toggle_Invoice()
+      this.Toggle_Invoice();
+    },
+    addNewInvoiceItem(){
+        this.invoiceItemList.push({
+            id: uid(),
+            itemName:"",
+            qty:"",
+            price:0,
+            total:0
+
+    })
+    },
+    deleteInvoiceItem(id){
+        this.invoiceItemList = this.invoiceItemList.filter(item => item.id !== id)
     }
+  },
+  watch: {
+    paymentTerms() {
+      const futureDate = new Date();
+      this.paymentDueDateUnix = futureDate.setDate(
+        futureDate.getDate() + parseInt(this.paymentTerms)
+      );
+      this.paymentDueDate = new Date(this.paymentDueDateUnix).toLocaleDateString(
+        "en-us",
+        this.dateOption
+      );
+    },
   },
 };
 </script>
@@ -254,7 +289,7 @@ export default {
   width: 100%;
   height: 100vh;
   overflow: scroll;
-  &::-webkit-scrollbar{
+  &::-webkit-scrollbar {
     display: none;
   }
   @media (min-width: 900px) {
@@ -326,47 +361,46 @@ export default {
               align-self: center;
             }
           }
-          .tableHeading{
+          .tableHeading {
             margin-bottom: 16px;
-            th{
-                text-align: left;
+            th {
+              text-align: left;
             }
           }
-          .tableItem{
+          .tableItem {
             position: relative;
             margin-bottom: 24px;
-            img{
-                position: absolute;
-                top: 15px;
-                right: 0;
-                width: 12px;
-                height: 16px;
+            img {
+              position: absolute;
+              top: 15px;
+              right: 0;
+              width: 12px;
+              height: 16px;
             }
           }
         }
-        .button{
-            color: #fff;
-            background-color: #252945;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
+        .button {
+          color: #fff;
+          background-color: #252945;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
 
-            img{
-                margin-right: 4px;
-            }
+          img {
+            margin-right: 4px;
+          }
         }
       }
-   
     }
-    .save{
-        margin-top: 60px;
-        div{
-            flex: 1;
-        }
-        .right{
-           justify-content: flex-end; 
-        }
+    .save {
+      margin-top: 60px;
+      div {
+        flex: 1;
       }
+      .right {
+        justify-content: flex-end;
+      }
+    }
   }
   .input {
     margin-bottom: 24px;
