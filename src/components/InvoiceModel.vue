@@ -1,9 +1,9 @@
 <template>
-  <div @click="CheckClick" ref="invoiceWrap" class="invoiceWrape flex flex-column">
+  <div @click="CheckClick" ref="invoiceWrap" class="invoiceWrap flex flex-column">
     <form @submit.prevent="submitForm" class="invoiceContent">
-      <h1>New Voice</h1>
+      <h1>New Invoice</h1>
       <!-- Bill From -->
-      <div class="billFrom flex flex-Column">
+      <div class="billFrom flex flex-column">
         <h4>Bill From</h4>
         <div class="input flex flex-column">
           <label for="billerStreetAddress">Street Address</label>
@@ -165,7 +165,7 @@
         </div>
         <div class="workItem">
           <h3>Item List</h3>
-          <table class="ItemList">
+          <table class="itemList">
             <tr class="tableHeading flex">
               <th class="itemName">Item Name</th>
               <th class="qty">Qty</th>
@@ -189,7 +189,7 @@
             </tr>
           </table>
           <div @click="addNewInvoiceItem" class="flex button">
-            <img src="@/assets/icon-plus.svg" alt="" srcset="">Add New Item
+            <img src="@/assets/icon-plus.svg" alt="" srcset="" />Add New Item
           </div>
         </div>
       </div>
@@ -197,14 +197,13 @@
       <!-- Save/Exit -->
       <div class="save flex">
         <div class="left">
-            <button @click="closeInvoice" class="red">Cancel</button>
+          <button @click="closeInvoice" class="red">Cancel</button>
         </div>
         <div class="right flex">
-            <button @click="saveDraft" class="dark-purple"> Save Draft</button>
-            <button @click="publishInvoice" class="purple"> Create Invoice</button>
+          <button @click="saveDraft" class="dark-purple">Save Draft</button>
+          <button @click="publishInvoice" class="purple">Create Invoice</button>
         </div>
       </div>
-
     </form>
   </div>
 </template>
@@ -240,42 +239,125 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.invoiceWrape{
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: transparent;
+.invoiceWrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: transparent;
+  width: 100%;
+  height: 100vh;
+  overflow: scroll;
+  @media (min-width: 900px) {
+    left: 90px;
+  }
+  .invoiceContent {
+    position: relative;
+    padding: 56px;
+    max-width: 700px;
     width: 100%;
-    height: 100vh;
-    overflow: scroll;
-    @media (min-width:900px) {
-        left: 90px;
-    }
-    .invoiceContent{
-        position: relative;
-        padding: 56px;
-        max-width: 700px;
-        width: 100%;
-        background-color: #141625;
-        color: #fff;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),0 2px 4px -1px rgba(0, 0, 0, 0.6);
+    background-color: #141625;
+    color: #fff;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.6);
 
-        h1{
-            margin-bottom: 48px;
-            color: #fff;
+    h1 {
+      margin-bottom: 48px;
+      color: #fff;
+    }
+    h3 {
+      margin-bottom: 16px;
+      font-size: 18px;
+      color: #777f98;
+    }
+    h4 {
+      color: #7c5dfa;
+      font-size: 12px;
+      margin-bottom: 24px;
+    }
+    // Bill to /Bil from
+    .billFrom,
+    .billTo {
+      margin-bottom: 48px;
+      .location {
+        gap: 16px;
+        div {
+          flex: 1;
         }
-        h3{
-          margin-bottom: 16px;
-          font-size: 18px;
-          color: #777f98;  
+      }
+    }
+
+    //Invoice Work
+    .invoiceWork {
+      .payment {
+        gap: 24px;
+        div {
+          flex: 1;
         }
-        h4{
-            color: #7c5dfa;
+      }
+      .workItem {
+        .itemList {
+          width: 100%;
+
+          //Item Table Style
+          .tableHeading,
+          .tableItem {
+            gap: 16px;
             font-size: 12px;
+            .itemName {
+              flex-basis: 50%;
+            }
+            .qty {
+              flex-basis: 10%;
+            }
+            .price {
+              flex-basis: 20%;
+            }
+            .total {
+              flex-basis: 20%;
+              align-self: center;
+            }
+          }
+          .tableHeading{
+            margin-bottom: 16px;
+            th{
+                text-align: left;
+            }
+          }
+          .tableItem{
+            position: relative;
             margin-bottom: 24px;
+            img{
+                position: absolute;
+                top: 15px;
+                right: 0;
+                width: 12px;
+                height: 16px;
+            }
+          }
         }
+        .button{
+            
+        }
+      }
     }
+  }
+  .input {
+    margin-bottom: 24px;
+  }
+  label {
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+  input,
+  select {
+    width: 100%;
+    color: #fff;
+    background-color: #1e2139;
+    border-radius: 4px;
+    padding: 12px 4px;
+    border: none;
+    &:focus {
+      outline: none;
+    }
+  }
 }
-
-
 </style>
