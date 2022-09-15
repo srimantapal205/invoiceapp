@@ -209,6 +209,7 @@
 </template>
 
 <script>
+ import {mapMutations} from "vuex"    
 export default {
   name: "InvoiceModel",
   data() {
@@ -235,6 +236,12 @@ export default {
       invoiceTotal: 0,
     };
   },
+  methods: {
+    ...mapMutations(['Toggle_Invoice']),
+    closeInvoice() {
+        this.Toggle_Invoice()
+    }
+  },
 };
 </script>
 
@@ -247,6 +254,9 @@ export default {
   width: 100%;
   height: 100vh;
   overflow: scroll;
+  &::-webkit-scrollbar{
+    display: none;
+  }
   @media (min-width: 900px) {
     left: 90px;
   }
