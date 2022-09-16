@@ -2,6 +2,7 @@
   <div @click="CheckClick" ref="invoiceWrap" class="invoiceWrap flex flex-column">
     <form @submit.prevent="submitForm" class="invoiceContent">
       <h1>New Invoice</h1>
+
       <!-- Bill From -->
       <div class="billFrom flex flex-column">
         <h4>Bill From</h4>
@@ -51,6 +52,7 @@
           </div>
         </div>
       </div>
+
       <!-- Bill To -->
       <div class="billTo flex flex-column">
         <h4>Bill To</h4>
@@ -122,6 +124,7 @@
           </div>
         </div>
       </div>
+
       <!-- Invoice Work Details -->
       <div class="invoiceWork flex flex-column">
         <div class="payment flex">
@@ -204,11 +207,13 @@
           <button @click="publishInvoice" class="purple">Create Invoice</button>
         </div>
       </div>
+
     </form>
   </div>
 </template>
 
 <script>
+  import db from "@/firebase/firebaseInit.js"
 import { mapMutations } from "vuex";
 import {uid} from 'uid'
 export default {
@@ -261,8 +266,61 @@ export default {
 
     })
     },
+    calInvoiceTotal(){
+      this.invoiceTotal = 0
+      this.invoiceItemList.forEach(item => {
+        this.invoiceTotal +=  item.total;
+      })
+    },
     deleteInvoiceItem(id){
         this.invoiceItemList = this.invoiceItemList.filter(item => item.id !== id)
+    },
+    publishInvoice(){
+      this.invoicePending = true;
+
+    },
+    saveDraft(){
+      this.invoiceDraft = true
+    },
+
+    async  uploadInvoice(){
+      if (this.invoiceItemList.length <= 0) {
+        alert("Please ensuere you field out work items!");
+        return;
+      }
+
+      this.calInvoiceTotal();
+
+
+      const dataBase = db.collection('invoice').doc()
+      await dataBase.set({
+      invoiceId:uid(6),
+      billerStreetAddress: this.billerStreetAddress,
+      billerCity: this.billerCity,
+      billerZipCode: this.billerZipCode,
+      billerCountry: this.billerCountry,
+      clientName: this.clientName,
+      clientEmail: this.clientEmail,
+      clientStreetAddress: this.clientStreetAddress,
+      clientCity: this.clientCity,
+      clientZipCode: this.clientZipCode,
+      clientCountry: this.clientCountry,
+      invoiceDateUnix: this.invoiceDateUnix,
+      invoiceDate: this.invoiceDate,
+      paymentTerms: this.paymentTerms,
+      paymentDueDateUnix: this.paymentDueDateUnix,
+      paymentDueDate: this.paymentDueDate,
+      productDescription: this.productDescription,
+      invoicePending:this.invoicePending ,
+      invoiceDraft: this.invoiceDraft,
+      invoicePaid:null
+      })
+
+      this.Toggle_Invoice();
+    },
+
+    submitForm(){
+      this.uploadInvoice()
     }
   },
   watch: {
