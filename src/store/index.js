@@ -28,11 +28,10 @@ export default createStore({
    async  Get_Invoice({commit, state}){
       const getData = await getDocs(collection(db, "invoice"));
       getData.forEach(doc=> {
-        // eslint-disable-next-line no-debugger
-        debugger;
         if(!state.invoiceData.some(invoice => invoice.docId === doc.id)){
           const data ={
-          invoiceId: doc.id,
+          docId: doc.id,
+          invoiceId: doc.data().invoiceId,
           billerStreetAddress: doc.data().billerStreetAddress,
           billerCity: doc.data().billerCity,
           billerZipCode: doc.data().billerZipCode,

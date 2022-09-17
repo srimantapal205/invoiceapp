@@ -205,7 +205,9 @@
         </div>
         <div class="right flex">
           <button type="submit" @click="saveDraft" class="dark-purple">Save Draft</button>
-          <button type="submit" @click="publishInvoice" class="purple">Create Invoice</button>
+          <button type="submit" @click="publishInvoice" class="purple">
+            Create Invoice
+          </button>
         </div>
       </div>
     </form>
@@ -258,9 +260,9 @@ export default {
   },
   methods: {
     ...mapMutations(["Toggle_Invoice", "Toggle_Modal"]),
-    CheckClick(e){
+    CheckClick(e) {
       if (e.target === this.$refs.invoiceWrap) {
-        this.Toggle_Modal()
+        this.Toggle_Modal();
       }
     },
     closeInvoice() {
@@ -297,7 +299,8 @@ export default {
       }
       this.isloading = true;
       this.calInvoiceTotal();
-      await addDoc(collection(db, "invoice"), { invoiceId: uid(6),
+      await addDoc(collection(db, "invoice"), {
+        invoiceId: uid(6),
         billerStreetAddress: this.billerStreetAddress,
         billerCity: this.billerCity,
         billerZipCode: this.billerZipCode,
@@ -318,7 +321,8 @@ export default {
         invoiceDraft: this.invoiceDraft,
         invoicePaid: null,
         invoiceItemList: this.invoiceItemList,
-        invoiceTotal: this.invoiceTotal, });
+        invoiceTotal: this.invoiceTotal,
+      });
       //const dataBase = db.collection('invoice').doc()
       this.isloading = false;
       this.Toggle_Invoice();
