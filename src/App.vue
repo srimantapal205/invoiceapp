@@ -3,24 +3,23 @@
     <div v-if="!mobile" class="app flex flex-column">
       <Navigation />
       <div class="appContaint flex flex-column">
-      <Modal/>
+        <Modal v-if="modalActive" />
         <transition name="invoiceSection">
-          <InvoiceModel v-if="invoiceModal"/>
+          <InvoiceModel v-if="invoiceModal" />
         </transition>
-            
+
         <router-view />
       </div>
-        
     </div>
     <div v-else class="mobileText flex flex-column">
-        <h2>Sorry this app is not supported in Mobile Devices</h2>
-        <p>To use this app please use a Computer and Tablet</p>
+      <h2>Sorry this app is not supported in Mobile Devices</h2>
+      <p>To use this app please use a Computer and Tablet</p>
     </div>
   </div>
 </template>
 
 <script>
- import {mapState} from "vuex" 
+import { mapState, mapActions } from "vuex";
 import Navigation from "@/components/Navigation.vue";
 import InvoiceModel from "@/components/InvoiceModel.vue";
 import Modal from "@/components/Modal.vue";
@@ -29,30 +28,32 @@ export default {
   name: "app-root",
   data() {
     return {
-      mobile: null
-    }
+      mobile: null,
+    };
   },
   components: {
     Navigation,
     InvoiceModel,
-    Modal
-},
-  created () {
+    Modal,
+  },
+  created() {
     this.checkScreen();
-    window.addEventListener("resize", this.checkScreen)
+    this.Get_Invoice();
+    window.addEventListener("resize", this.checkScreen);
   },
   methods: {
+    ...mapActions(["Get_Invoice"]),
     checkScreen() {
-      const windowWidth = window.innerWidth
-      if (windowWidth <=750 ) {
-         this.mobile =true;
-         return
+      const windowWidth = window.innerWidth;
+      if (windowWidth <= 750) {
+        this.mobile = true;
+        return;
       }
-      this.mobile=false;
-    }
+      this.mobile = false;
+    },
   },
   computed: {
-    ...mapState(['invoiceModal'])
+    ...mapState(["invoiceModal", "modalActive", "invoicesLoaded"]),
   },
 };
 </script>
@@ -78,28 +79,26 @@ export default {
     position: relative;
   }
 }
-.mobileText{
+.mobileText {
   text-align: center;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color:#141625;
+  background-color: #141625;
   color: #ffffff;
-  p{
+  p {
     margin-top: 16px;
   }
 }
 //animated  invoice
 .invoiceSection-enter-active,
-.invoiceSection-leave-active{
-
+.invoiceSection-leave-active {
   transition: 0.8s ease all;
 }
 .invoiceSection-enter-from,
-.invoiceSection-leave-to{
- transform:  translateX(-700px); 
+.invoiceSection-leave-to {
+  transform: translateX(-700px);
 }
-
 
 button,
 .button {

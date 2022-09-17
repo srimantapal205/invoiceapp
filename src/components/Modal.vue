@@ -11,8 +11,19 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";    
 export default {
   name: "ModalComponent",
+  methods: {
+    ...mapMutations(["Toggle_Invoice","Toggle_Modal"]),
+    CloseModal() {
+        this.Toggle_Modal()
+    },
+    CloseInvoice() {
+        this.Toggle_Invoice()
+        this.Toggle_Modal()
+    }
+  },
 };
 </script>
 
