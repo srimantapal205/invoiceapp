@@ -1,6 +1,7 @@
 <template>
   <div @click="CheckClick" ref="invoiceWrap" class="invoiceWrap flex flex-column">
     <form @submit.prevent="submitForm" class="invoiceContent">
+      <Loading v-show="isloading" />
       <h1>New Invoice</h1>
 
       <!-- Bill From -->
@@ -200,26 +201,30 @@
       <!-- Save/Exit -->
       <div class="save flex">
         <div class="left">
-          <button @click="closeInvoice" class="red">Cancel</button>
+          <button type="button" @click="closeInvoice" class="red">Cancel</button>
         </div>
         <div class="right flex">
-          <button @click="saveDraft" class="dark-purple">Save Draft</button>
-          <button @click="publishInvoice" class="purple">Create Invoice</button>
+          <button type="submit" @click="saveDraft" class="dark-purple">Save Draft</button>
+          <button type="button" @click="publishInvoice" class="purple">Create Invoice</button>
         </div>
       </div>
-
     </form>
   </div>
 </template>
 
 <script>
-  import db from "@/firebase/firebaseInit.js"
+import db from "@/firebase/firebaseInit.js";
+import { collection, addDoc } from "firebase/firestore";
+
 import { mapMutations } from "vuex";
-import {uid} from 'uid'
+import { uid } from "uid";
+import Loading from "@/components/Loading.vue";
 export default {
   name: "InvoiceModel",
+  components: { Loading },
   data() {
     return {
+      isloading: false,
       dateOption: { year: "numeric", month: "short", day: "numeric" },
       billerStreetAddress: null,
       billerCity: null,
@@ -256,72 +261,69 @@ export default {
     closeInvoice() {
       this.Toggle_Invoice();
     },
-    addNewInvoiceItem(){
-        this.invoiceItemList.push({
-            id: uid(),
-            itemName:"",
-            qty:"",
-            price:0,
-            total:0
-
-    })
+    addNewInvoiceItem() {
+      this.invoiceItemList.push({
+        id: uid(),
+        itemName: "",
+        qty: "",
+        price: 0,
+        total: 0,
+      });
     },
-    calInvoiceTotal(){
-      this.invoiceTotal = 0
-      this.invoiceItemList.forEach(item => {
-        this.invoiceTotal +=  item.total;
-      })
+    calInvoiceTotal() {
+      this.invoiceTotal = 0;
+      this.invoiceItemList.forEach((item) => {
+        this.invoiceTotal += item.total;
+      });
     },
-    deleteInvoiceItem(id){
-        this.invoiceItemList = this.invoiceItemList.filter(item => item.id !== id)
+    deleteInvoiceItem(id) {
+      this.invoiceItemList = this.invoiceItemList.filter((item) => item.id !== id);
     },
-    publishInvoice(){
+    publishInvoice() {
       this.invoicePending = true;
-
     },
-    saveDraft(){
-      this.invoiceDraft = true
+    saveDraft() {
+      this.invoiceDraft = true;
     },
-
-    async  uploadInvoice(){
+    async uploadInvoice() {
       if (this.invoiceItemList.length <= 0) {
         alert("Please ensuere you field out work items!");
         return;
       }
-
+      this.isloading = true;
       this.calInvoiceTotal();
-
-
-      const dataBase = db.collection('invoice').doc()
-      await dataBase.set({
-      invoiceId:uid(6),
-      billerStreetAddress: this.billerStreetAddress,
-      billerCity: this.billerCity,
-      billerZipCode: this.billerZipCode,
-      billerCountry: this.billerCountry,
-      clientName: this.clientName,
-      clientEmail: this.clientEmail,
-      clientStreetAddress: this.clientStreetAddress,
-      clientCity: this.clientCity,
-      clientZipCode: this.clientZipCode,
-      clientCountry: this.clientCountry,
-      invoiceDateUnix: this.invoiceDateUnix,
-      invoiceDate: this.invoiceDate,
-      paymentTerms: this.paymentTerms,
-      paymentDueDateUnix: this.paymentDueDateUnix,
-      paymentDueDate: this.paymentDueDate,
-      productDescription: this.productDescription,
-      invoicePending:this.invoicePending ,
-      invoiceDraft: this.invoiceDraft,
-      invoicePaid:null
-      })
-
+      const baseData = {
+        invoiceId: uid(6),
+        billerStreetAddress: this.billerStreetAddress,
+        billerCity: this.billerCity,
+        billerZipCode: this.billerZipCode,
+        billerCountry: this.billerCountry,
+        clientName: this.clientName,
+        clientEmail: this.clientEmail,
+        clientStreetAddress: this.clientStreetAddress,
+        clientCity: this.clientCity,
+        clientZipCode: this.clientZipCode,
+        clientCountry: this.clientCountry,
+        invoiceDateUnix: this.invoiceDateUnix,
+        invoiceDate: this.invoiceDate,
+        paymentTerms: this.paymentTerms,
+        paymentDueDateUnix: this.paymentDueDateUnix,
+        paymentDueDate: this.paymentDueDate,
+        productDescription: this.productDescription,
+        invoicePending: this.invoicePending,
+        invoiceDraft: this.invoiceDraft,
+        invoicePaid: null,
+        invoiceItemList: this.invoiceItemList,
+        invoiceTotal: this.invoiceTotal,
+      };
+      await addDoc(collection(db, "invoice"), { baseData });
+      //const dataBase = db.collection('invoice').doc()
+      this.isloading = false;
       this.Toggle_Invoice();
     },
-
-    submitForm(){
-      this.uploadInvoice()
-    }
+    submitForm() {
+      this.uploadInvoice();
+    },
   },
   watch: {
     paymentTerms() {
