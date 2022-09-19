@@ -7,6 +7,7 @@ export default createStore({
     invoiceModal:null,
     modalActive:null,
     invoicesLoaded :null,
+    currentInvoiceArray:null
   },
   getters: {
   },
@@ -22,6 +23,11 @@ export default createStore({
     },
     Invoices_Loaded(state){
       state.invoicesLoaded = true
+    },
+    Set_Current_Invoice(state, payload){
+      state.currentInvoiceArray = state.invoiceData.filter((invoice) => {
+        return invoice.invoiceId === payload
+      })
     }
   },
   actions: {
