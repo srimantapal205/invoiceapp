@@ -93,13 +93,13 @@
           >
             <p>{{ item.itemName }}</p>
             <p>{{ item.qty }}</p>
-            <p>{{ item.price }}</p>
-            <p>{{ item.total }}</p>
+            <p>${{ item.price }}</p>
+            <p>${{ item.total }}</p>
           </div>
         </div>
         <div class="total flex">
           <p>Ammount Due</p>
-          <p>{{ currentInvoice.invoiceTotal }}</p>
+          <p>${{ currentInvoice.invoiceTotal }}</p>
         </div>
       </div>
     </div>
