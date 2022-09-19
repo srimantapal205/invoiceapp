@@ -27,8 +27,11 @@
       </div>
     </div>
     <!-- Invoice List -->
-    <div>
+    <div v-if="invoiceData.length>0">
       <Invoice v-for="(invoice, index) in invoiceData" :invoice="invoice" :key="index"/>
+    </div>
+    <div class="empty flrx flex-column">
+      <img src="@/assets/illustration-empty.svg" alt="Ino Invoice" srcset="">
     </div>
   </div>
 </template>
